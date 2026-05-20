@@ -12,7 +12,13 @@ json_set() {
   local file="$1" path="$2" value="$3"
   local tmp
   tmp=$(mktemp)
-  jq "$path = \"$value\"" "$file" > "$tmp" && mv "$tmp" "$file"
+  if jq --arg v "$value" "$path = \$v" "$file" > "$tmp"; then
+    mv "$tmp" "$file"
+  else
+    rm -f "$tmp"
+    echo "ERROR: json_set failed for $path in $file" >&2
+    return 1
+  fi
 }
 
 # 合并两个 JSON 对象(后者覆盖前者)
@@ -26,21 +32,36 @@ json_merge() {
 build_prompt_json() {
   local shot_json="$1" card_dir="$2" aspect="$3"
   local prompt_en lighting mood characters
-  prompt_en=$(echo "$shot_json" | jq -r '.description_en')
-  lighting=$(echo "$shot_json" | jq -r '.lighting')
-  mood=$(echo "$shot_json" | jq -r '.mood')
-  characters=$(echo "$shot_json" | jq -c '.characters')
+
+  # Validate input is an object
+  if ! echo "$shot_json" | jq -e 'type == "object"' >/dev/null 2>&1; then
+    echo "ERROR: build_prompt_json: shot_json is not a valid JSON object" >&2
+    return 1
+  fi
+
+  prompt_en=$(echo "$shot_json" | jq -r '.description_en // empty')
+  if [[ -z "$prompt_en" ]]; then
+    echo "ERROR: build_prompt_json: shot_json missing required .description_en" >&2
+    return 1
+  fi
+
+  lighting=$(echo "$shot_json" | jq -r '.lighting // ""')
+  mood=$(echo "$shot_json" | jq -r '.mood // ""')
+  characters=$(echo "$shot_json" | jq -c '.characters // []')
+
+  # Build the combined prompt, omitting empty segments
+  local combined="$prompt_en"
+  [[ -n "$lighting" ]] && combined="$combined, $lighting"
+  [[ -n "$mood" ]] && combined="$combined, $mood"
 
   jq -n \
-    --arg p "$prompt_en" \
-    --arg l "$lighting" \
-    --arg m "$mood" \
+    --arg p "$combined" \
     --arg a "$aspect" \
     --argjson c "$characters" \
     --arg cd "$card_dir" \
     --argjson sm "$shot_json" \
     '{
-       prompt_en: ($p + ", " + $l + ", " + $m),
+       prompt_en: $p,
        negative: "blurry, low quality, watermark, text overlay, ugly, deformed",
        aspect: $a,
        seed: 42,
