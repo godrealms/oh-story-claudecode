@@ -134,9 +134,11 @@ done
 
 ## Phase 5：生成 manifest + 字幕脚本
 
-跑完后生成两份汇总。
+跑完后生成两份汇总。Phase 4（失败重试）跑完后再执行下面两个脚本。
 
 ### _manifest.json（在 `{EPISODE_DIR}/`）
+
+schema：
 
 ```json
 {
@@ -152,9 +154,69 @@ done
 }
 ```
 
+从 `镜头视频/*.json` sidecar 汇总生成：
+
+```bash
+# Generate _manifest.json from 镜头视频/*.json sidecar files
+EPISODE_DIR="{工作根}/第NNN集"
+EPISODE_NUM=$(basename "$EPISODE_DIR" | sed 's/^第0*\([0-9]\+\)集$/\1/')
+
+jq -n \
+  --arg ep "$EPISODE_NUM" \
+  --argjson shots "$(
+    jq -s 'map({
+      id: .shot_id,
+      duration: (.duration // 5),
+      video: ("镜头视频/" + .shot_id + ".mp4"),
+      status: (if .status == null then "ok" else .status end),
+      backend: (.backend // "unknown")
+    })' "$EPISODE_DIR"/镜头视频/*.json
+  )" \
+  '{
+    episode: ($ep | tonumber),
+    total_shots: ($shots | length),
+    succeeded: ($shots | map(select(.status == "ok")) | length),
+    failed: ($shots | map(select(.status != "ok")) | length),
+    total_duration: ($shots | map(.duration) | add),
+    shots: $shots
+  }' > "$EPISODE_DIR/_manifest.json"
+```
+
 ### 字幕脚本.txt（在 `{EPISODE_DIR}/`）
 
 按 [references/post-production-handoff.md](references/post-production-handoff.md) 格式累加每镜对白 / OS + 时间码，剪映可直接导入。
+
+时间码靠累加每镜 duration 算出来；对白 / OS 从 `镜头表.json` 取：
+
+```bash
+# Generate 字幕脚本.txt from 镜头表.json (source of dialogue/OS) + sidecar durations
+EPISODE_DIR="{工作根}/第NNN集"
+SHOTLIST="$EPISODE_DIR/镜头表.json"
+
+ACCUM=0
+> "$EPISODE_DIR/字幕脚本.txt"
+
+for SHOT_ID in $(jq -r '.shots[].id' "$SHOTLIST"); do
+  SHOT=$(jq -c ".shots[] | select(.id == \"$SHOT_ID\")" "$SHOTLIST")
+  DURATION=$(echo "$SHOT" | jq -r '.duration // 5')
+  DIALOGUE=$(echo "$SHOT" | jq -r '.dialogue // empty')
+  OS=$(echo "$SHOT" | jq -r '.os // empty')
+
+  # Format timecode HH:MM:SS or MM:SS
+  START_SEC=$ACCUM
+  END_SEC=$(awk "BEGIN {print $ACCUM + $DURATION}")
+  START_TS=$(printf '%02d:%02d' $((START_SEC / 60)) $((START_SEC % 60)))
+  END_TS=$(printf '%02d:%02d' $((${END_SEC%.*} / 60)) $((${END_SEC%.*} % 60)))
+
+  LINE=""
+  [[ -n "$DIALOGUE" ]] && LINE="$DIALOGUE"
+  [[ -n "$OS" ]] && LINE="${LINE:+$LINE / }OS：$OS"
+  [[ -z "$LINE" ]] && LINE="（无对白）"
+
+  printf '%s - %s  [%s]  %s\n' "$START_TS" "$END_TS" "$SHOT_ID" "$LINE" >> "$EPISODE_DIR/字幕脚本.txt"
+  ACCUM=$(awk "BEGIN {print $ACCUM + $DURATION}")
+done
+```
 
 ---
 
@@ -183,8 +245,8 @@ done
 | 时机 | 跳转到 | 命令 |
 |---|---|---|
 | 视频出完 | 后期工具（剪映 / Pr） | 见 [references/post-production-handoff.md](references/post-production-handoff.md) |
-| 某镜不满意 | 单镜重生 | `/image-to-video --redo S017` |
-| 失败重试 | `/image-to-video --retry-failures` | — |
+| 某镜不满意 | 单镜重生（手动） | 暂用单镜循环重跑，见 Phase 4「当前实现说明」（Plan 4 会落地 `--redo`） |
+| 失败重试（手动） | 见 Phase 4「当前实现说明」 | Plan 4 落地 `--retry-failures` |
 
 ---
 

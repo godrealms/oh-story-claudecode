@@ -171,8 +171,8 @@ advanced 版（face embedding）留给未来扩展。
 | 时机 | 跳转到 | 命令 |
 |---|---|---|
 | 镜头图出完 | image-to-video | `/image-to-video` |
-| 某镜不满意 | 单镜重生 | `/shot-to-image --redo S017` |
-| 失败重试 | `/shot-to-image --retry-failures` | — |
+| 某镜不满意 | 单镜重生（手动） | 暂用单镜循环重跑，见 Phase 5「当前实现说明」（Plan 4 会落地 `--redo`） |
+| 失败重试（手动） | 见 Phase 5「当前实现说明」 | Plan 4 落地 `--retry-failures` |
 
 ---
 

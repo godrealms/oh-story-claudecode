@@ -55,4 +55,10 @@ fi
 echo "[route] dispatching to backend=$BACKEND" >&2
 
 # 把 stdin pipe 给 adapter
-exec "$ADAPTER" "${ARGS[@]}"
+# 注意:bash 3.2 (macOS 默认) 下 ${ARGS[@]} 在数组为空时会触发 unbound variable,
+# 显式判长度后再展开,避免 set -u 导致的崩溃
+if [[ ${#ARGS[@]} -gt 0 ]]; then
+  exec "$ADAPTER" "${ARGS[@]}"
+else
+  exec "$ADAPTER"
+fi
