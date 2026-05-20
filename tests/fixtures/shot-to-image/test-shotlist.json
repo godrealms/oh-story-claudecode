@@ -1,0 +1,53 @@
+{
+  "episode": 1,
+  "shots": [
+    {
+      "id": "S001",
+      "scene": 1,
+      "framing": "MS",
+      "camera": "static",
+      "duration": 3.0,
+      "description_cn": "沈栀推开巫术司大门,雨水从屋檐滴落",
+      "description_en": "A young Asian woman in dark high-collar robes pushes open heavy wooden doors of an ancient sorcery bureau. Rain drips from the eaves above her, backlit by warm lantern light from inside. Cinematic film still, medium shot, shot on 35mm, shallow depth of field, moody nighttime atmosphere.",
+      "characters": ["沈栀"],
+      "dialogue": null,
+      "os": null,
+      "location": "巫术司大厅",
+      "time_of_day": "夜",
+      "lighting": "moody candlelight, cool blue rain backlight",
+      "mood": "tense, foreboding"
+    },
+    {
+      "id": "S002",
+      "scene": 1,
+      "framing": "MCU",
+      "camera": "static",
+      "duration": 2.0,
+      "description_cn": "司长抬头,看见沈栀样子愣了一下",
+      "description_en": "Medium close-up of an older man in dark robes seated at a desk. He looks up from scrolls, eyes widening slightly in recognition. Candlelight catches his weathered face. Cinematic film still, warm interior lighting.",
+      "characters": ["司长"],
+      "dialogue": "你来晚了。",
+      "os": null,
+      "location": "巫术司大厅",
+      "time_of_day": "夜",
+      "lighting": "moody candlelight",
+      "mood": "tense"
+    },
+    {
+      "id": "S003",
+      "scene": 1,
+      "framing": "CU",
+      "camera": "push",
+      "duration": 2.5,
+      "description_cn": "沈栀面部特写,平静地说话",
+      "description_en": "Close-up of a young Asian woman's face. Calm but heavy expression, faint scar above left eyebrow. Camera slowly pushes in. Cinematic film still, candlelit intimate lighting, shallow depth of field.",
+      "characters": ["沈栀"],
+      "dialogue": "我母亲死了。",
+      "os": null,
+      "location": "巫术司大厅",
+      "time_of_day": "夜",
+      "lighting": "moody candlelight",
+      "mood": "somber"
+    }
+  ]
+}
