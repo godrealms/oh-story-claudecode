@@ -7,13 +7,13 @@ AI 短剧最大的工程难点。本流水线走"角色卡预生成 + 复用"方
 ## 整体流程
 
 ```
-1. 第一次跑 shot-to-image:
+1. 第一次跑 shot-to-image：
    - 扫镜头表.json 的 characters[] → 去重得角色清单
-   - 为每个角色生成角色卡(正面胸像,纯色背景)
+   - 为每个角色生成角色卡（正面胸像，纯色背景）
      - 写入 短剧/角色卡/{角色名}.png
-     - 写入 短剧/角色卡/{角色名}.json(含 description_en + 后端 refer 字段位置)
-   - 上传到后端拿 refer ID/URL,回填到 .json
-2. 后续每镜生图:
+     - 写入 短剧/角色卡/{角色名}.json（含 description_en + 后端 refer 字段位置）
+   - 上传到后端拿 refer ID/URL，回填到 .json
+2. 后续每镜生图：
    - 读 角色卡/{角色名}.json
    - 按当前后端的机制传 refer
    - 生图
@@ -36,11 +36,11 @@ A young Asian woman, early twenties, waist-length black hair, dark high-collar r
 ### Midjourney `--cref`
 
 ```
-{prompt} --cref {character_card_url} --cw 100 --ar 9:16 --v 6
+{prompt} --cref {character_card_url} --cw 80 --ar 9:16 --v 6
 ```
 
 - `--cref`：角色参考图 URL（必须公网可访问）
-- `--cw 0-100`：权重，100 = 最贴近参考，0 = 只参考脸不参考服饰
+- `--cw 0-100`：权重，0 = 只参考脸不参考服饰；100 = 最贴近参考但易过拟合；80 = 推荐
 
 工作流：
 1. 角色卡生成后，上传到代理提供的图床（各代理服务商 API 不一，通常返回一个 https URL）
@@ -90,7 +90,7 @@ A young Asian woman, early twenties, waist-length black hair, dark high-collar r
 ```json
 {
   "name": "沈栀",
-  "description_cn": "二十出头女性,长发及腰,深色道袍,左眉有疤",
+  "description_cn": "二十出头女性，长发及腰，深色道袍，左眉有疤",
   "description_en": "Young Asian woman, early twenties, waist-length black hair, dark high-collar robe, faint scar above left eyebrow, pale skin, sharp eyes",
   "reference_png": "角色卡/沈栀.png",
   "mj_cref_url": null,
