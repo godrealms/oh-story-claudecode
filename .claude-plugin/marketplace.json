@@ -4,8 +4,8 @@
     "name": "worldwonderer"
   },
   "metadata": {
-    "description": "网络小说创作工具箱 — 扫榜、拆文、写作全流程 Claude Code skill，覆盖长篇与短篇网文",
-    "version": "0.6.0"
+    "description": "网络小说创作工具箱 — 扫榜、拆文、写作、影视化全流程 Claude Code skill，覆盖长篇与短篇网文 + AI 短剧",
+    "version": "0.7.0"
   },
   "plugins": [
     {

@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.7.0
+
+> 新增小说转视频影视化流水线 — 5 个 skill 串起从小说到 AI 短剧的全链路
+
+### 新增
+
+- **story-to-script**:小说转剧本。把网文(单章/范围/独立文本)转成中文短剧拍摄本,可选额外产出分镜本。智能识别 long-write 项目结构或独立单文件。三档改编强度(忠于原著/节奏优先/大刀阔斧)、心理描写外化、对白压缩。
+- **script-to-shot**:剧本转镜头。把拍摄本拆成结构化镜头表(`.md` 给人读 + `.json` 给机器读),含景别(ELS/LS/MS/MCU/CU/ECU)、运镜(8 种)、时长、英文画面描述。配 bash JSON schema validator(`validate_shotlist.sh`)。
+- **shot-to-image**:镜头转图片。**6 个生图后端全部实现**(gpt-image / mj / replicate / fal / comfy / prompt-only),统一 stdin JSON 适配器契约。含角色卡预生成 + 复用工程方案(MJ `--cref` / SD IP-Adapter / 即梦 Refer 都有字段位置)。失败镜单独记录,不阻塞全集。
+- **image-to-video**:图片转视频。**4 个真后端实现**(kling / jimeng / runway / prompt-only)+ 2 个占位(sora / veo)。运动提示词三层(Camera / Subject / Atmosphere),按后端 prompt 风格微调。每镜 5s 默认。
+- **story-pipeline**:小说转视频编排器。**6 个分步闸门**(剧本/镜头表/角色卡/镜头图/镜头视频/交付包),每闸暂停等用户确认,支持续跑(`.pipeline.state.json`)和回退(`--redo gate-N`)。
+- **共享基础设施**:`lib/json.sh`(jq 包装 + 提示词构造)、`lib/poll.sh`(异步任务轮询)、`state.sh`(7 个状态管理函数)、`character_card.sh`(角色卡预生成入口)、`route.sh`(按 env 自动后端探测 + 显式覆盖)。
+- **测试 fixture**:`tests/fixtures/novel-sample-chapter.md` + `expected-script.md` + `expected-shotlist.json`。
+
+### 集成
+
+- `/story` 路由表新增 5 个出口 + 关键词分发(`拍短剧`/`开拍` → `/story-pipeline`,`转剧本`/`改编` → `/story-to-script`,`分镜`/`画分镜` → `/script-to-shot`,`生镜头图`/`出图` → `/shot-to-image`,`图生视频`/`出视频` → `/image-to-video`)。
+- `story-long-write` 流程衔接表末尾加跳转:写完想拍成短剧 → `/story-pipeline`。
+- README.md + README_EN.md 增加「影视化流水线 / Novel-to-Video Pipeline」段。
+- `marketplace.json` 注册 5 个新 plugin,category 为新 `novel-video`,metadata 版本 0.6.0 → 0.7.0。
+
+### 工程硬约束(从 review 中沉淀)
+
+- **JSON 构造**:全部用 `jq -n --arg/--argjson`,杜绝 `echo "$X" | jq -Rs .` 的尾部 `\n` 污染。
+- **HTTP 错误检测**:`curl -sS --max-time N -o body -w '%{http_code}'` + 显式 `[[ $code != 2* ]]` 检查,API 5xx 不再静默轮询到 timeout。
+- **base64 跨平台**:用 stdin 重定向 `base64 < file`(BSD `base64 -w` 不存在);非空输出守卫。
+- **trap 单引号**:`trap 'rm -f "$X"' EXIT`,延迟变量展开。
+- **角色卡 schema 分离**:`{name}.card.json`(canonical schema)≠ `{name}.json`(adapter sidecar 审计),避免互相覆盖。
+- **Comfy 后端探测**:用 `/system_stats` JSON 形状检查替代纯 HTTP 200/404,杜绝陌生服务假阳性。
+- **state.sh zsh 兼容**:`trap RETURN` 由 `BASH_VERSION` 守卫,zsh 下静默跳过。
+
+### 文档
+
+- `docs/superpowers/specs/2026-05-20-novel-to-video-pipeline-design.md`:整条流水线设计 spec(599 行)。
+- `docs/superpowers/plans/2026-05-20-novel-to-video-{1..4}-*.md`:4 个分阶段实施 plan(6704 行)。
+
+### 验证
+
+- 每个 skill 的 Phase 走双 reviewer 质量门(spec compliance + code quality)
+- shot-to-image / image-to-video 在 prompt-only backend 下端到端跑通(无 API key 即可验证骨架)
+- 完整 `/story-pipeline` 6 闸门 + 单 skill 独立使用两条 acceptance test 留给用户手动验证
+
 ## v0.6.5
 
 > 写作去 AI 味密度修复 + 对标路径说明统一
