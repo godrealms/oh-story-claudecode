@@ -39,32 +39,41 @@ mkdir -p "$OUT_DIR"
 
 # 调 API
 RESPONSE=$(mktemp)
-trap "rm -f $RESPONSE" EXIT
+trap 'rm -f "$RESPONSE"' EXIT
 
 if [[ -n "$REFER" && -f "$REFER" ]]; then
   # 图生图(用角色卡作 refer)
-  curl -s "${BASE_URL}/images/edits" \
+  HTTP_CODE=$(curl -sS --max-time 120 -o "$RESPONSE" -w '%{http_code}' \
+    "${BASE_URL}/images/edits" \
     -H "Authorization: Bearer ${API_KEY}" \
     -F "model=${MODEL}" \
     -F "prompt=${PROMPT_EN}" \
-    -F "image=@${REFER}" \
+    -F "image=@${REFER};type=image/png" \
     -F "size=${SIZE}" \
-    -F "response_format=b64_json" \
-    > "$RESPONSE"
+    -F "response_format=b64_json")
 else
-  # 文生图
-  curl -s "${BASE_URL}/images/generations" \
+  # 文生图 (用 jq -n 安全构造请求体,避免 echo 尾随 \n)
+  REQUEST_BODY=$(jq -n \
+    --arg model "$MODEL" \
+    --arg prompt "$PROMPT_EN" \
+    --arg size "$SIZE" \
+    '{model: $model, prompt: $prompt, size: $size, response_format: "b64_json"}')
+
+  HTTP_CODE=$(curl -sS --max-time 120 -o "$RESPONSE" -w '%{http_code}' \
+    "${BASE_URL}/images/generations" \
     -H "Authorization: Bearer ${API_KEY}" \
     -H "Content-Type: application/json" \
-    -d "{
-      \"model\": \"${MODEL}\",
-      \"prompt\": $(echo "$PROMPT_EN" | jq -Rs .),
-      \"size\": \"${SIZE}\",
-      \"response_format\": \"b64_json\"
-    }" > "$RESPONSE"
+    -d "$REQUEST_BODY")
 fi
 
-# 检查错误
+# 检查 HTTP 状态码
+if [[ "$HTTP_CODE" != 2* ]]; then
+  echo "ERROR: GPT-Image API returned HTTP $HTTP_CODE" >&2
+  cat "$RESPONSE" >&2
+  exit 1
+fi
+
+# 检查 API 业务错误
 ERROR_MSG=$(jq -r '.error.message // empty' "$RESPONSE")
 if [[ -n "$ERROR_MSG" ]]; then
   echo "ERROR: GPT-Image API error: $ERROR_MSG" >&2
@@ -80,18 +89,24 @@ if [[ -z "$B64" ]]; then
 fi
 echo "$B64" | base64 --decode > "$OUT_DIR/$SHOT_ID.png"
 
-# 写伴随 .json
-cat > "$OUT_DIR/$SHOT_ID.json" <<EOF
-{
-  "shot_id": "$SHOT_ID",
-  "backend": "gpt-image",
-  "model": "${MODEL}",
-  "size": "${SIZE}",
-  "prompt": $(echo "$PROMPT_EN" | jq -Rs .),
-  "refer_image": $(echo "${REFER:-}" | jq -Rs .),
-  "generated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-}
-EOF
+# 写伴随 .json (用 jq -n --arg 安全构造)
+jq -n \
+  --arg id "$SHOT_ID" \
+  --arg backend "gpt-image" \
+  --arg model "$MODEL" \
+  --arg size "$SIZE" \
+  --arg prompt "$PROMPT_EN" \
+  --arg refer "${REFER:-}" \
+  --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  '{
+    shot_id: $id,
+    backend: $backend,
+    model: $model,
+    size: $size,
+    prompt: $prompt,
+    refer_image: $refer,
+    generated_at: $ts
+  }' > "$OUT_DIR/$SHOT_ID.json"
 
 echo "OK $SHOT_ID -> $OUT_DIR/$SHOT_ID.png" >&2
 exit 0
