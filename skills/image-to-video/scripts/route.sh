@@ -12,18 +12,27 @@ ARGS=("$@")
 # 决定 backend
 BACKEND="${VIDEO_BACKEND:-}"
 
+# 判断 adapter 是否为占位（Plan 4 之后 sora/veo 暂时占位）
+# 显式 VIDEO_BACKEND=sora 仍然会走到占位脚本（适合开发者测试），
+# 但自动探测时即便环境变量齐备也跳过占位，落到下一个后端
+is_placeholder() {
+  local adapter="$1"
+  [[ -f "$adapter" ]] || return 0
+  grep -q '^# adapters/.*占位' "$adapter" 2>/dev/null
+}
+
 if [[ -z "$BACKEND" ]]; then
-  # 自动探测;Plan 3 只实现了 kling 和 prompt-only,
-  # 其他后端(jimeng/runway/sora/veo)即便环境变量齐备,adapter 文件不存在也会跳过
-  if [[ -n "${KLING_API_KEY:-}" && -n "${KLING_BASE_URL:-}" ]]; then
+  # 自动探测优先级：kling → jimeng → runway → sora → veo → prompt-only
+  # adapter 文件不存在 / 非可执行 / 占位脚本 都会被跳过
+  if [[ -n "${KLING_API_KEY:-}" && -n "${KLING_BASE_URL:-}" ]] && [[ -x "$ADAPTERS_DIR/kling.sh" ]] && ! is_placeholder "$ADAPTERS_DIR/kling.sh"; then
     BACKEND="kling"
-  elif [[ -n "${JIMENG_API_KEY:-}" && -n "${JIMENG_BASE_URL:-}" ]] && [[ -x "$ADAPTERS_DIR/jimeng.sh" ]]; then
+  elif [[ -n "${JIMENG_API_KEY:-}" && -n "${JIMENG_BASE_URL:-}" ]] && [[ -x "$ADAPTERS_DIR/jimeng.sh" ]] && ! is_placeholder "$ADAPTERS_DIR/jimeng.sh"; then
     BACKEND="jimeng"
-  elif [[ -n "${RUNWAY_API_KEY:-}" ]] && [[ -x "$ADAPTERS_DIR/runway.sh" ]]; then
+  elif [[ -n "${RUNWAY_API_KEY:-}" ]] && [[ -x "$ADAPTERS_DIR/runway.sh" ]] && ! is_placeholder "$ADAPTERS_DIR/runway.sh"; then
     BACKEND="runway"
-  elif [[ -n "${SORA_API_KEY:-}" && -n "${SORA_BASE_URL:-}" ]] && [[ -x "$ADAPTERS_DIR/sora.sh" ]]; then
+  elif [[ -n "${SORA_API_KEY:-}" && -n "${SORA_BASE_URL:-}" ]] && [[ -x "$ADAPTERS_DIR/sora.sh" ]] && ! is_placeholder "$ADAPTERS_DIR/sora.sh"; then
     BACKEND="sora"
-  elif [[ -n "${VEO_API_KEY:-}" ]] && [[ -x "$ADAPTERS_DIR/veo.sh" ]]; then
+  elif [[ -n "${VEO_API_KEY:-}" ]] && [[ -x "$ADAPTERS_DIR/veo.sh" ]] && ! is_placeholder "$ADAPTERS_DIR/veo.sh"; then
     BACKEND="veo"
   else
     BACKEND="prompt-only"
@@ -33,17 +42,8 @@ fi
 ADAPTER="$ADAPTERS_DIR/${BACKEND//-/_}.sh"
 
 if [[ ! -f "$ADAPTER" ]]; then
-  # Friendly hint for known-but-unimplemented backends
-  case "$BACKEND" in
-    jimeng|runway|sora|veo)
-      echo "ERROR: backend '$BACKEND' is documented but not yet implemented (planned for Plan 4)." >&2
-      echo "       Currently available: kling, prompt-only." >&2
-      echo "       To proceed, set VIDEO_BACKEND=kling (requires KLING_API_KEY + KLING_BASE_URL) or VIDEO_BACKEND=prompt-only." >&2
-      ;;
-    *)
-      echo "ERROR: adapter for backend '$BACKEND' not found at $ADAPTER" >&2
-      ;;
-  esac
+  echo "ERROR: adapter for backend '$BACKEND' not found at $ADAPTER" >&2
+  echo "       Available: kling, jimeng, runway, prompt-only (and sora/veo placeholders)." >&2
   exit 1
 fi
 
