@@ -22,7 +22,8 @@ if [[ -z "$BACKEND" ]]; then
     BACKEND="fal"
   elif [[ -n "${REPLICATE_API_TOKEN:-}" ]]; then
     BACKEND="replicate"
-  elif curl -s -o /dev/null -w "%{http_code}" "http://${COMFY_HOST:-127.0.0.1:8188}/" --max-time 2 2>/dev/null | grep -q "200\|404"; then
+  elif curl -s --max-time 2 "http://${COMFY_HOST:-127.0.0.1:8188}/system_stats" 2>/dev/null \
+       | jq -e 'has("system") or has("devices")' >/dev/null 2>&1; then
     BACKEND="comfy"
   else
     BACKEND="prompt-only"
