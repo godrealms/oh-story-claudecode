@@ -26,6 +26,22 @@ MOTION=$(echo "$PROMPT_JSON" | jq -r '.motion_prompt')
 DURATION=$(echo "$PROMPT_JSON" | jq -r '.duration')
 ASPECT=$(echo "$PROMPT_JSON" | jq -r '.aspect')
 
+# 校验必填字段:缺失时 fail-fast,避免 output 写出字面 "null"
+if [[ -z "$PROMPT_EN" || "$PROMPT_EN" == "null" ]]; then
+  echo "ERROR: prompt_only: stdin JSON missing required .prompt_en" >&2
+  exit 1
+fi
+if [[ -z "$DURATION" || "$DURATION" == "null" ]]; then
+  echo "ERROR: prompt_only: stdin JSON missing required .duration" >&2
+  exit 1
+fi
+if [[ -z "$ASPECT" || "$ASPECT" == "null" ]]; then
+  echo "ERROR: prompt_only: stdin JSON missing required .aspect" >&2
+  exit 1
+fi
+# motion_prompt 可选:缺失时退化为空字符串
+[[ "$MOTION" == "null" ]] && MOTION=""
+
 # IMAGE 占位:为空时填提示文字
 IMAGE_DISPLAY="${IMAGE:-<填入镜头图路径>}"
 

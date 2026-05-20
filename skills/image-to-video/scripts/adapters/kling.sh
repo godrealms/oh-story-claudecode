@@ -43,8 +43,15 @@ fi
 
 mkdir -p "$OUT_DIR"
 
-# 1. 把图片转 base64(Linux 用 -w 0,macOS 用 tr 去换行)
-IMAGE_B64=$(base64 -w 0 "$IMAGE" 2>/dev/null || base64 "$IMAGE" | tr -d '\n')
+# 1. 把图片转 base64(用 stdin 重定向,兼容 BSD/macOS 和 GNU/Linux)
+#    BSD base64 不支持 -w 也不接受位置文件参数,必须走 stdin
+IMAGE_B64=$(base64 -w 0 < "$IMAGE" 2>/dev/null || base64 < "$IMAGE" | tr -d '\n')
+
+# 安全网:即使 base64 退出码为 0,也确认输出非空
+if [[ -z "$IMAGE_B64" ]]; then
+  echo "ERROR: kling: base64 produced empty output for $IMAGE (file size: $(wc -c < "$IMAGE" 2>/dev/null || echo unknown))" >&2
+  exit 1
+fi
 
 # 2. 提交任务
 SUBMIT_RESPONSE=$(mktemp)
