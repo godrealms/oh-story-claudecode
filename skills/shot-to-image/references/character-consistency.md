@@ -112,3 +112,7 @@ A young Asian woman, early twenties, waist-length black hair, dark high-collar r
 1. 删掉那张图
 2. 跑 `/shot-to-image --retry-failures` 重生
 3. 如果重生 3 次还不像 → 提示用户考虑换后端，或者用更详细的 prompt 描述
+
+> ⚠️ **当前实现说明**：`--retry-failures` 暂为约定,尚未在 route.sh 实现。
+> 当前 agent 需要手动从 `.failures.jsonl` 读取失败镜号,逐条走 SKILL.md Phase 3 单镜循环重生。
+> 该约定将在 Plan 4 编排 skill 落地时统一实现。

@@ -24,7 +24,7 @@ metadata:
 
 1. **角色卡预生成 + 复用** —— 见 [references/character-consistency.md](references/character-consistency.md)
 2. **多后端适配层** —— 见 [references/backend-cheatsheet.md](references/backend-cheatsheet.md)
-3. **失败不阻塞** —— 单镜失败记录到 `.failures.json`，末尾汇总，用户跑 `--retry-failures`
+3. **失败不阻塞** —— 单镜失败记录到 `.failures.jsonl`（一行一个 JSON 记录），末尾汇总，用户跑 `--retry-failures`
 
 ---
 
@@ -53,7 +53,7 @@ jq -r '[.shots[].characters[]] | unique | .[]' {工作根}/第NNN集/镜头表.j
 ### 召回 description_en
 
 按以下优先级：
-1. `{工作根}/短剧/角色卡/{name}.card.json` 已存在 → 跳过生成（character_card.sh 会自动 short-circuit）
+1. `{工作根}/短剧/角色卡/{name}.png` 和 `{name}.card.json` 都存在 → 跳过生成（character_card.sh 自动 short-circuit）。注意：prompt-only 后端不生成 PNG，重跑会再次写入 prompt 文件，这是预期行为。
 2. long-write 模式下 `设定/角色/{name}.md` 含 `## description_en` 段（由 script-to-shot 写）→ 用它
 3. 都没有 → 询问用户角色外观描述（或者从拍摄本/镜头表抽取构造）
 
@@ -104,8 +104,13 @@ for SHOT_ID in $(jq -r '.shots[].id' 镜头表.json); do
        ${REFER:+--refer "$REFER"}; then
     : # 成功
   else
-    # 失败记录
-    echo "$SHOT_ID" >> {工作根}/第NNN集/.failures.json
+    # 失败记录(JSONL,一行一个记录)
+    jq -n \
+      --arg id "$SHOT_ID" \
+      --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+      --arg reason "adapter exit non-zero" \
+      '{shot_id:$id, ts:$ts, reason:$reason}' \
+      >> "{工作根}/第NNN集/.failures.jsonl"
   fi
 done
 ```
@@ -126,7 +131,14 @@ advanced 版（face embedding）留给未来扩展。
 /shot-to-image --retry-failures
 ```
 
-→ 读 `.failures.json` → 只重生这些镜号 → 成功的从失败列表移除。
+→ 读 `.failures.jsonl` → 只重生这些镜号 → 成功的从失败列表移除。
+
+> ⚠️ **当前实现说明**：`--retry-failures` 和 `--redo` 暂为约定,尚未在 route.sh 实现。
+> 当前 agent 需要手动:
+> 1. `jq -r '.shot_id' {工作根}/第NNN集/.failures.jsonl` 读取失败镜号
+> 2. 对每个失败镜号,从 `镜头表.json` 取对应 shot,再走 Phase 3 单镜循环
+> 3. 成功后从 `.failures.jsonl` 删除对应行
+> 这些约定将在 Plan 4 编排 skill 落地时统一实现。
 
 重试 3 次仍失败 → 提示用户考虑换后端或改 `description_en`（见 [references/failure-modes.md](references/failure-modes.md)）。
 

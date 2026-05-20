@@ -104,3 +104,7 @@
 3. 改不好 → 换后端：`IMG_BACKEND=mj /shot-to-image --redo S017`
 4. 换不好 → 改 `镜头表.json` 里的 `description_en`，然后 redo
 5. 还不好 → 改 `镜头表.json` 里的 `framing` 或 `camera`（可能是镜头语言决策本身有问题）
+
+> ⚠️ **当前实现说明**：`--redo` 暂为约定,尚未在 route.sh 实现。
+> 当前 agent 需要手动从 `镜头表.json` 取单条 shot,走 SKILL.md Phase 3 的单镜循环重生。
+> 该约定将在 Plan 4 编排 skill 落地时统一实现。
