@@ -167,6 +167,16 @@
       "category": "novel-video",
       "keywords": ["image", "storyboard-image", "镜头图", "GPT-Image", "Midjourney", "FLUX", "chinese"],
       "skills": ["./skills/shot-to-image"]
+    },
+    {
+      "name": "image-to-video",
+      "description": "图片转视频。把镜头图 + 运动提示词转成视频片段（每镜 5s 默认），支持多生视频后端（可灵 / 即梦 / Runway / Sora / Veo / prompt-only）。",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "novel-video",
+      "keywords": ["video", "i2v", "image-to-video", "镜头视频", "可灵", "即梦", "Runway", "chinese"],
+      "skills": ["./skills/image-to-video"]
     }
   ]
 }
