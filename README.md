@@ -101,11 +101,24 @@ npx skills add worldwonderer/oh-story-claudecode -y -g
 | `story-cover` | `/story-cover` `/封面` | 封面生成 · 书名题材分析 + GPT-Image-2 出图 |
 | `browser-cdp` | `/browser-cdp` | 浏览器操控 · CDP 协议复用登录态抓取数据 |
 
+### 影视化流水线
+
+把成稿小说推进到短剧视频，5 个 skill 串成一条流水线，也可单独使用。
+
+| Skill | 触发 | 说明 |
+|:------|:-----|:-----|
+| `story-to-script` | `/story-to-script` `/转剧本` | 小说转剧本 · 中文短剧拍摄本（场景/角色/台词/动作） |
+| `script-to-shot` | `/script-to-shot` `/分镜` | 剧本转镜头 · 结构化镜头表（`.md` + `.json`）+ 英文画面描述 |
+| `shot-to-image` | `/shot-to-image` `/生镜头图` | 镜头转图片 · 含角色卡预生成，支持 6 个生图后端（gpt-image / mj / replicate / fal / comfy / prompt-only） |
+| `image-to-video` | `/image-to-video` `/图生视频` | 图片转视频 · 支持 5 个生视频后端（可灵 / 即梦 / Runway / Sora / Veo） |
+| `story-pipeline` | `/story-pipeline` `/拍短剧` | 流水线编排 · 5 个 skill + 6 个分步闸门（gate-0 到 gate-6），支持续跑与回退 |
+
 自然语言同样触发：
 - 「帮我开书」→ `story-long-write`
 - 「这篇太 AI 了」→ `story-deslop`
 - 「把我的书导进来」→ `story-import`
 - 「沈栀现在什么状态」→ 自动 spawn `story-explorer` agent
+- 「把这章拍成短剧」→ `story-pipeline`
 
 <details>
 <summary>封面生成示例</summary>

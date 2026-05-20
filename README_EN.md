@@ -103,7 +103,19 @@ Re-run the same command to update.
 | `story-cover` | `/story-cover` | Cover generation — title & genre analysis + GPT-Image-2 image generation |
 | `browser-cdp` | `/browser-cdp` | Browser control — CDP protocol for scraping with reusable login sessions |
 
-Natural language also triggers: `帮我开书` ("help me start writing") → `story-long-write`, `这篇太AI了` ("this is too AI-ish") → `story-deslop`, `把我的书导进来` ("import my book") → `story-import`, `沈栀现在什么状态` ("what's Shen Zhi's current status") → `story-explorer`.
+### Novel-to-Video Pipeline
+
+Take finished prose through to a Chinese short-drama video. Five skills, chainable end-to-end or usable standalone.
+
+| Skill | Trigger | Description |
+|:------|:--------|:------------|
+| `story-to-script` | `/story-to-script` | Novel → Screenplay — Chinese short-drama shooting script (scenes / characters / dialogue / actions) |
+| `script-to-shot` | `/script-to-shot` | Screenplay → Shot list — structured `.md` + `.json` with English visual descriptions |
+| `shot-to-image` | `/shot-to-image` | Shot list → Stills — with character card prefab; supports 6 image backends (gpt-image / mj / replicate / fal / comfy / prompt-only) |
+| `image-to-video` | `/image-to-video` | Stills → Video clips — supports 5 video backends (Kling / Jimeng / Runway / Sora / Veo) |
+| `story-pipeline` | `/story-pipeline` | Orchestrator — chains all 5 skills via 6 gated stages (gate-0 to gate-6); supports resume and redo |
+
+Natural language also triggers: `帮我开书` ("help me start writing") → `story-long-write`, `这篇太AI了` ("this is too AI-ish") → `story-deslop`, `把我的书导进来` ("import my book") → `story-import`, `沈栀现在什么状态` ("what's Shen Zhi's current status") → `story-explorer`, `把这章拍成短剧` ("turn this chapter into a short drama") → `story-pipeline`.
 
 <details>
 <summary>Cover generation example</summary>
