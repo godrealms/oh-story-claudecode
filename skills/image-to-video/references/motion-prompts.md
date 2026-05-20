@@ -75,20 +75,22 @@ Atmosphere: {lighting}, {mood} mood, cinematic quality, film grain
 
 ## 完整 prompt 示例
 
+> **关于本节示例：** 这是手工拼出的"理想形态"prompt（含 Subject motion / Duration / cinematic 后缀）。`lib/json.sh` 的 `build_video_prompt_json` 只产出最小骨架（`Camera:... Atmosphere:...`，无 Subject motion，无 Duration 行），Subject motion / cinematic quality / Duration 由 adapter 或 agent 在调后端前手动追加。镜头表的 `duration` 字段允许小数（如 3.0），adapter 会按各后端能接受的档位映射（如 kling 走 5/10 两档）。
+
 镜头表里的 S001（沈栀推门）：
 
 ```json
 {
   "id": "S001",
   "camera": "static",
-  "duration": 3.0,
+  "duration": 5.0,
   "description_en": "A young Asian woman in dark robes pushes open heavy wooden doors of an ancient sorcery bureau. Rain drips from the eaves...",
   "lighting": "moody candlelight, cool blue rain backlight",
   "mood": "tense, foreboding"
 }
 ```
 
-构造的视频 prompt：
+构造的视频 prompt（理想形态）：
 
 ```
 A young Asian woman in dark robes pushes open heavy wooden doors of an ancient sorcery bureau. Rain drips from the eaves above her.
@@ -96,7 +98,15 @@ A young Asian woman in dark robes pushes open heavy wooden doors of an ancient s
 Camera: static camera, locked-off shot, subtle natural motion only.
 Subject motion: subject pushes door open slowly, walks into frame.
 Atmosphere: moody candlelight, cool blue rain backlight, tense and foreboding mood.
-Duration: 3 seconds.
+Duration: 5 seconds.
+```
+
+`build_video_prompt_json` 默认产出（最小骨架）：
+
+```
+A young Asian woman in dark robes pushes open heavy wooden doors of an ancient sorcery bureau. Rain drips from the eaves...
+
+Camera: static camera, locked-off shot. Atmosphere: moody candlelight, cool blue rain backlight, tense, foreboding.
 ```
 
 ---
