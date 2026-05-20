@@ -157,6 +157,16 @@
       "category": "novel-video",
       "keywords": ["shot-list", "storyboard", "分镜", "镜头表", "shooting-list", "chinese"],
       "skills": ["./skills/script-to-shot"]
+    },
+    {
+      "name": "shot-to-image",
+      "description": "镜头转图片。把镜头表.json 转成镜头图，含角色卡预生成 + 复用，支持多生图后端（GPT-Image-2 / MJ / Replicate / Fal / ComfyUI / prompt-only）。",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "novel-video",
+      "keywords": ["image", "storyboard-image", "镜头图", "GPT-Image", "Midjourney", "FLUX", "chinese"],
+      "skills": ["./skills/shot-to-image"]
     }
   ]
 }
