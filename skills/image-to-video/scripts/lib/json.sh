@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 # lib/json.sh — jq 包装,统一 JSON 读写
+# NOTE: json_get / json_set / json_merge are duplicated in
+#   skills/shot-to-image/scripts/lib/json.sh — keep these generic helpers in sync.
+#   Only build_video_prompt_json (here) vs build_prompt_json (image) differs.
+# Similarly, poll.sh is shared verbatim between the two skills.
 
 # 读单字段(找不到返回空串)
 json_get() {
