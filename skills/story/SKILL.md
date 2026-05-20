@@ -25,6 +25,11 @@ description: |
 | 环境部署 | 准备写书、搭环境、初始化 | `/story-setup` |
 | 浏览器操控 | 浏览器、抓取、登录态 | `/browser-cdp` |
 | 导入小说 | 导入、反向解析、导入小说、把我的书导进来 | `/story-import` |
+| 影视化.剧本 | 转剧本、改编 | `/story-to-script` |
+| 影视化.分镜 | 分镜、画分镜、拆镜头 | `/script-to-shot` |
+| 影视化.出图 | 生镜头图、出图 | `/shot-to-image` |
+| 影视化.生视频 | 图生视频、出视频 | `/image-to-video` |
+| 影视化.全流程 | 拍短剧、开拍、跑流水线、小说转视频 | `/story-pipeline` |
 | 查故事资料 | 查角色、查伏笔、查进度、查设定、什么状态、写到哪了 | 直接 spawn `story-explorer` agent（使用结构化 prompt：`项目目录：{dir}\n查询类型：{根据意图选择}\n查询参数：{用户查询}`） |
 | 查资料 | 查资料、帮我查资料、调研、搜索一下、搜一下 | 直接 spawn `story-researcher` agent |
 
@@ -35,6 +40,14 @@ description: |
 3. 如果能明确匹配，直接调用对应 skill（`Skill("skill-name")`）
 4. 如果无法匹配，询问用户想做什么（从上表中选择）
 5. 如果用户说"我想写小说"但未指定长篇/短篇，询问篇幅类型后再路由
+
+### 影视化关键词分发
+
+- "拍短剧" / "开拍" / "跑流水线" / "小说转视频" → `/story-pipeline`（完整流水线：剧本 → 分镜 → 出图 → 视频）
+- "转剧本" / "改编" → `/story-to-script`（你也可以跑 `/story-pipeline` 走完整流程）
+- "分镜" / "拆镜头" → `/script-to-shot`（你也可以跑 `/story-pipeline` 走完整流程）
+- "生镜头图" / "出图" → `/shot-to-image`（你也可以跑 `/story-pipeline` 走完整流程）
+- "图生视频" / "出视频" → `/image-to-video`（你也可以跑 `/story-pipeline` 走完整流程）
 
 ## 项目状态感知
 
