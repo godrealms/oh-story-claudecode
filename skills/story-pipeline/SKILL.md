@@ -114,22 +114,42 @@ state_set_gate "$EPISODE_DIR" gate-0 approved
 
 ```bash
 for GATE in gate-1 gate-2 gate-3 gate-4 gate-5; do
-  CURRENT=$(state_get_current_gate "$EPISODE_DIR")
-  STATUS=$(state_get_gate_status "$EPISODE_DIR" "$GATE")
+  STATUS="$(state_get_gate_status "$EPISODE_DIR" "$GATE")"
 
-  # 续跑：已 approved 的闸门跳过
-  [[ "$STATUS" == "approved" ]] && continue
+  case "$STATUS" in
+    approved)
+      # 续跑：已通过的闸门直接跳过
+      continue
+      ;;
+    waiting_approval)
+      # 上次跑到这一闸停在等批准；不重跑，直接等确认
+      echo "$GATE 上次已交付，等待确认。"
+      ;;
+    running)
+      # 异常中断，建议重做
+      echo "$GATE 上次异常中断（status=running）。要重做（state_reset_from \"$EPISODE_DIR\" $GATE）还是退出（手动诊断）？(重做/退出)"
+      read RESPONSE
+      case "$RESPONSE" in
+        重做) state_reset_from "$EPISODE_DIR" "$GATE" ;;
+        *) exit 0 ;;
+      esac
+      STATUS="pending"
+      ;;
+  esac
 
-  state_set_gate "$EPISODE_DIR" "$GATE" running
+  # 如 status 在上面变成了 pending 或本来就 pending/stale，执行 sub-skill
+  if [[ "$STATUS" == "pending" || "$STATUS" == "stale" ]]; then
+    state_set_gate "$EPISODE_DIR" "$GATE" running
 
-  # 调对应子 skill（带环境变量）
-  STORY_PIPELINE_EPISODE_DIR="$EPISODE_DIR" \
-  STORY_PIPELINE_GATE="$GATE" \
-  IMG_BACKEND="$(state_get_config "$EPISODE_DIR" img_backend)" \
-  VIDEO_BACKEND="$(state_get_config "$EPISODE_DIR" video_backend)" \
-    {对应子 skill 调用}
+    # 调对应子 skill（带环境变量）
+    STORY_PIPELINE_EPISODE_DIR="$EPISODE_DIR" \
+    STORY_PIPELINE_GATE="$GATE" \
+    IMG_BACKEND="$(state_get_config "$EPISODE_DIR" img_backend)" \
+    VIDEO_BACKEND="$(state_get_config "$EPISODE_DIR" video_backend)" \
+      {对应子 skill 调用}
 
-  state_set_gate "$EPISODE_DIR" "$GATE" waiting_approval
+    state_set_gate "$EPISODE_DIR" "$GATE" waiting_approval
+  fi
 
   # 读失败镜号（如果子 skill 写了 .failures.jsonl）
   if [[ -f "$EPISODE_DIR/.failures.jsonl" ]]; then
@@ -157,7 +177,7 @@ done
 
 ### gate-2：镜头表（script-to-shot）
 
-调：`/script-to-shot` Phase 1-5
+调：`/script-to-shot` 全 Phase
 产物：`$EPISODE_DIR/镜头表.md` + `镜头表.json`（校验通过）
 
 ### gate-3：角色卡（shot-to-image Phase 2）

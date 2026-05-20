@@ -18,8 +18,7 @@
   "config": {
     "img_backend": "mj",
     "video_backend": "kling",
-    "aspect": "9:16",
-    "duration_default": 5
+    "aspect": "9:16"
   },
   "created_at": "2026-05-20T10:00:00Z"
 }
@@ -39,7 +38,6 @@
 - `config`：本集全局配置
   - `img_backend` / `video_backend`：用哪个后端（用户在 gate-0 决定）
   - `aspect`：`9:16` 或 `16:9`
-  - `duration_default`：每镜默认时长（秒）
 - `created_at`：state 创建时间，由 `state_init` 写入
 
 ---

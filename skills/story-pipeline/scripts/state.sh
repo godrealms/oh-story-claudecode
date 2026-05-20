@@ -73,7 +73,10 @@ state_set_gate() {
 
   local tmp
   tmp=$(mktemp)
-  trap 'rm -f "$tmp"' RETURN
+  # trap RETURN 仅 bash 支持；zsh 用别的语法且会对裸 RETURN 报警告
+  if [[ -n "${BASH_VERSION:-}" ]]; then
+    trap 'rm -f "$tmp"' RETURN
+  fi
 
   jq --arg g "$gate" \
      --arg s "$gate_status" \
@@ -96,7 +99,10 @@ state_add_artifact() {
 
   local tmp
   tmp=$(mktemp)
-  trap 'rm -f "$tmp"' RETURN
+  # trap RETURN 仅 bash 支持；zsh 用别的语法且会对裸 RETURN 报警告
+  if [[ -n "${BASH_VERSION:-}" ]]; then
+    trap 'rm -f "$tmp"' RETURN
+  fi
 
   jq --arg g "$gate" --arg a "$artifact" \
     '.gates[$g].artifacts = ((.gates[$g].artifacts // []) + [$a])' \
@@ -137,7 +143,10 @@ state_reset_from() {
 
   local tmp
   tmp=$(mktemp)
-  trap 'rm -f "$tmp"' RETURN
+  # trap RETURN 仅 bash 支持；zsh 用别的语法且会对裸 RETURN 报警告
+  if [[ -n "${BASH_VERSION:-}" ]]; then
+    trap 'rm -f "$tmp"' RETURN
+  fi
 
   jq --argjson n "$gate_num" --arg g "$from_gate" '
     .gates = (
