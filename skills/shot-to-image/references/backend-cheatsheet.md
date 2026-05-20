@@ -4,7 +4,7 @@
 
 ---
 
-## GPT-Image-2（`gpt-image`）
+## GPT-Image-2（`gpt-image`）— **状态：已实现（Plan 2）**
 
 - **环境变量**：`GPT_IMAGE_API_KEY`，可选 `GPT_IMAGE_BASE_URL`（默认 `https://api.openai.com/v1`）
 - **提示词风格**：自然语言英文，跟 DALL-E 风格类似
@@ -17,7 +17,7 @@
 
 ---
 
-## Midjourney 第三方代理（`mj`）
+## Midjourney 第三方代理（`mj`）— **状态：占位，Plan 4 落地**
 
 - **环境变量**：`MJ_API_KEY`，`MJ_BASE_URL`（必填，各代理不一样）
 - **提示词风格**：关键词堆叠，加 `--ar 9:16 --v 6 --style raw` 等参数
@@ -30,7 +30,7 @@
 
 ---
 
-## Replicate（`replicate`）
+## Replicate（`replicate`）— **状态：占位，Plan 4 落地**
 
 - **环境变量**：`REPLICATE_API_TOKEN`
 - **提示词风格**：看模型，FLUX 用自然语言，SDXL 用 tag 式
@@ -42,7 +42,7 @@
 
 ---
 
-## Fal.ai（`fal`）
+## Fal.ai（`fal`）— **状态：占位，Plan 4 落地**
 
 - **环境变量**：`FAL_KEY`
 - **提示词风格**：同 Replicate（主力 FLUX 系列）
@@ -53,7 +53,7 @@
 
 ---
 
-## ComfyUI 本地（`comfy`）
+## ComfyUI 本地（`comfy`）— **状态：占位，Plan 4 落地**
 
 - **环境变量**：`COMFY_HOST`（默认 `127.0.0.1:8188`）
 - **提示词风格**：依赖加载的 checkpoint（FLUX/SDXL/SD1.5）
@@ -64,7 +64,7 @@
 
 ---
 
-## prompt-only（`prompt-only`）
+## prompt-only（`prompt-only`）— **状态：已实现（Plan 2）**
 
 - **环境变量**：无
 - **行为**：不调任何 API，只输出 .mj.txt（MJ 风格）和 .sd.json（SD/Comfy 风格）到 `提示词/` 目录

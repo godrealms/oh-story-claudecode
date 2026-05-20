@@ -33,7 +33,17 @@ fi
 ADAPTER="$ADAPTERS_DIR/${BACKEND//-/_}.sh"
 
 if [[ ! -f "$ADAPTER" ]]; then
-  echo "ERROR: adapter for backend '$BACKEND' not found at $ADAPTER" >&2
+  # Friendly hint for known-but-unimplemented backends
+  case "$BACKEND" in
+    mj|replicate|fal|comfy)
+      echo "ERROR: backend '$BACKEND' is documented but not yet implemented (planned for Plan 4)." >&2
+      echo "       Currently available: gpt-image, prompt-only." >&2
+      echo "       To proceed, set IMG_BACKEND=gpt-image (requires GPT_IMAGE_API_KEY) or IMG_BACKEND=prompt-only." >&2
+      ;;
+    *)
+      echo "ERROR: adapter for backend '$BACKEND' not found at $ADAPTER" >&2
+      ;;
+  esac
   exit 1
 fi
 
