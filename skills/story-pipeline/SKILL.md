@@ -198,7 +198,7 @@ done
 3. 加 BGM，挑 {根据 mood 推荐的 BGM 类型}
 4. 用 字幕脚本.txt 加字幕轨
 5. OS 段用剪映 TTS（古风男 / 女声），其他对白可不加配音（让画面 + 字幕承担）
-6. 输出参数：见 image-to-video 的 references/post-production-handoff.md
+6. 输出参数：见 `skills/image-to-video/references/post-production-handoff.md`
 
 ## 统计
 - 总镜数：{N}
