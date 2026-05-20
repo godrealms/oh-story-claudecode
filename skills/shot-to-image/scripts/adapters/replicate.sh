@@ -25,12 +25,13 @@ done
 
 API_TOKEN="${REPLICATE_API_TOKEN:?ERROR: REPLICATE_API_TOKEN required}"
 MODEL="${REPLICATE_MODEL_VERSION:-black-forest-labs/flux-dev}"
+TIMEOUT="${REPLICATE_TIMEOUT:-180}"
 
 PROMPT_JSON=$(cat)
 PROMPT_EN=$(echo "$PROMPT_JSON" | jq -r '.prompt_en // empty')
 ASPECT=$(echo "$PROMPT_JSON" | jq -r '.aspect // "9:16"')
 NEGATIVE=$(echo "$PROMPT_JSON" | jq -r '.negative // ""')
-SEED=$(echo "$PROMPT_JSON" | jq -r '.seed // 42')
+SEED=$(echo "$PROMPT_JSON" | jq -r '(.seed // 42) | tonumber' 2>/dev/null || echo 42)
 
 [[ -z "$PROMPT_EN" ]] && { echo "ERROR: stdin JSON missing required .prompt_en" >&2; exit 1; }
 
@@ -87,7 +88,7 @@ IMAGE_URL=$(poll_task \
   --fail-values "failed,canceled" \
   --result-jq '.output | if type == "array" then .[0] else . end' \
   --interval 5 \
-  --timeout 300)
+  --timeout "$TIMEOUT")
 
 [[ -z "$IMAGE_URL" ]] && { echo "ERROR: Replicate poll returned empty URL" >&2; exit 1; }
 

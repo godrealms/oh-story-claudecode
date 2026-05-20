@@ -25,6 +25,7 @@ done
 
 API_KEY="${MJ_API_KEY:?ERROR: MJ_API_KEY required}"
 BASE_URL="${MJ_BASE_URL:?ERROR: MJ_BASE_URL required}"
+TIMEOUT="${MJ_TIMEOUT:-300}"
 
 PROMPT_JSON=$(cat)
 PROMPT_EN=$(echo "$PROMPT_JSON" | jq -r '.prompt_en // empty')
@@ -77,7 +78,7 @@ IMAGE_URL=$(poll_task \
   --fail-values "FAILED,failed,error,FAILURE" \
   --result-jq '.image_url // .result.url // .data.url' \
   --interval 5 \
-  --timeout 300)
+  --timeout "$TIMEOUT")
 
 [[ -z "$IMAGE_URL" ]] && { echo "ERROR: MJ poll returned empty URL" >&2; exit 1; }
 

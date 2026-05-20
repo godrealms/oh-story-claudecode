@@ -26,7 +26,7 @@ PROMPT_JSON=$(cat)
 PROMPT_EN=$(echo "$PROMPT_JSON" | jq -r '.prompt_en // empty')
 ASPECT=$(echo "$PROMPT_JSON" | jq -r '.aspect // "9:16"')
 NEGATIVE=$(echo "$PROMPT_JSON" | jq -r '.negative // ""')
-SEED=$(echo "$PROMPT_JSON" | jq -r '.seed // 42')
+SEED=$(echo "$PROMPT_JSON" | jq -r '(.seed // 42) | tonumber' 2>/dev/null || echo 42)
 
 [[ -z "$PROMPT_EN" ]] && { echo "ERROR: stdin JSON missing required .prompt_en" >&2; exit 1; }
 

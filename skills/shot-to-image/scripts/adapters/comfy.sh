@@ -23,6 +23,7 @@ done
 
 COMFY_HOST="${COMFY_HOST:-127.0.0.1:8188}"
 WORKFLOW_FILE="${COMFY_WORKFLOW:-./comfy-workflow.json}"
+TIMEOUT="${COMFY_TIMEOUT:-180}"
 
 # 可被覆盖的节点 ID(默认值匹配 SDXL/FLUX 常见模板)
 NODE_CLIP="${COMFY_NODE_CLIP:-6}"
@@ -39,11 +40,36 @@ fi
 
 PROMPT_JSON=$(cat)
 PROMPT_EN=$(echo "$PROMPT_JSON" | jq -r '.prompt_en // empty')
-SEED=$(echo "$PROMPT_JSON" | jq -r '.seed // 42')
+SEED=$(echo "$PROMPT_JSON" | jq -r '(.seed // 42) | tonumber' 2>/dev/null || echo 42)
 
 [[ -z "$PROMPT_EN" ]] && { echo "ERROR: stdin JSON missing required .prompt_en" >&2; exit 1; }
 
 mkdir -p "$OUT_DIR"
+
+# 注入前先验证 workflow 中存在目标节点 ID(否则 jq 会静默创建顶层 key,Comfy 会回 500)
+WORKFLOW_RAW=$(cat "$WORKFLOW_FILE")
+HAS_CLIP=$(echo "$WORKFLOW_RAW" | jq -r --arg n "$NODE_CLIP" 'has($n)')
+HAS_KSAMPLER=$(echo "$WORKFLOW_RAW" | jq -r --arg n "$NODE_KSAMPLER" 'has($n)')
+
+if [[ "$HAS_CLIP" != "true" ]]; then
+  echo "ERROR: workflow $WORKFLOW_FILE does not contain CLIP node ID '$NODE_CLIP'" >&2
+  echo "       Set COMFY_NODE_CLIP env var to match your workflow's CLIP text encode node ID" >&2
+  exit 1
+fi
+if [[ "$HAS_KSAMPLER" != "true" ]]; then
+  echo "ERROR: workflow $WORKFLOW_FILE does not contain KSampler node ID '$NODE_KSAMPLER'" >&2
+  echo "       Set COMFY_NODE_KSAMPLER env var to match your workflow's KSampler node ID" >&2
+  exit 1
+fi
+
+if [[ -n "$REFER" ]]; then
+  HAS_LOAD_IMAGE=$(echo "$WORKFLOW_RAW" | jq -r --arg n "$NODE_LOAD_IMAGE" 'has($n)')
+  if [[ "$HAS_LOAD_IMAGE" != "true" ]]; then
+    echo "ERROR: workflow $WORKFLOW_FILE does not contain LoadImage node ID '$NODE_LOAD_IMAGE'" >&2
+    echo "       Set COMFY_NODE_LOAD_IMAGE env var or remove --refer" >&2
+    exit 1
+  fi
+fi
 
 # 注入 prompt 和 seed 到 workflow(用 jq --arg 安全构造,节点 ID 通过变量参数化)
 WORKFLOW=$(jq \
@@ -114,7 +140,6 @@ echo "[comfy] submitted prompt=$PROMPT_ID, polling..." >&2
 # 2. 轮询 /history/<prompt_id>(完成时 .[prompt_id].status.completed == true)
 HISTORY_URL="http://${COMFY_HOST}/history/${PROMPT_ID}"
 ELAPSED=0
-TIMEOUT=180
 INTERVAL=2
 COMPLETED=""
 

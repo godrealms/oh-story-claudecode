@@ -34,7 +34,7 @@ skill 启动时检查环境变量，按 [references/backend-cheatsheet.md](refer
 
 route.sh 在 dispatch 时会把选中的 backend 打到 stderr（`[route] dispatching to backend=...`），用户能看到。
 
-> **当前后端状态**：Plan 2 实现了 `gpt-image` 和 `prompt-only`；`mj` / `replicate` / `fal` / `comfy` 见 Plan 4。设置 `IMG_BACKEND` 强制使用未实现后端时会得到清晰的错误提示。
+> **当前后端状态**：全部 6 个生图后端均已实现（gpt-image / mj / replicate / fal / comfy / prompt-only）。设置 `IMG_BACKEND` 强制使用某后端时若环境变量缺失会得到清晰的错误提示。
 
 告知用户：
 - 本次用什么后端、为什么
