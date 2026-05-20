@@ -137,6 +137,26 @@
       "category": "novel-cover",
       "keywords": ["cover", "封面", "image", "GPT-Image", "chinese"],
       "skills": ["./skills/story-cover"]
+    },
+    {
+      "name": "story-to-script",
+      "description": "小说转剧本。把网文(单章/范围/独立文本)转成中文短剧拍摄本,可选额外产出分镜本。",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "novel-video",
+      "keywords": ["script", "adaptation", "shooting-script", "短剧", "拍摄本", "改编", "chinese"],
+      "skills": ["./skills/story-to-script"]
+    },
+    {
+      "name": "script-to-shot",
+      "description": "剧本转镜头。把中文短剧拍摄本拆成结构化镜头表(.md 人读 + .json 机器读),含景别/运镜/时长/英文画面描述。",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "novel-video",
+      "keywords": ["shot-list", "storyboard", "分镜", "镜头表", "shooting-list", "chinese"],
+      "skills": ["./skills/script-to-shot"]
     }
   ]
 }
