@@ -177,6 +177,16 @@
       "category": "novel-video",
       "keywords": ["video", "i2v", "image-to-video", "镜头视频", "可灵", "即梦", "Runway", "chinese"],
       "skills": ["./skills/image-to-video"]
+    },
+    {
+      "name": "story-pipeline",
+      "description": "小说转视频编排器。6 个分步闸门（剧本/镜头表/角色卡/镜头图/镜头视频/交付包），每闸暂停等用户确认，支持续跑和回退。",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "novel-video",
+      "keywords": ["pipeline", "orchestrator", "短剧", "拍短剧", "开拍", "novel-to-video", "chinese"],
+      "skills": ["./skills/story-pipeline"]
     }
   ]
 }
