@@ -145,7 +145,7 @@ metadata:
 1. 收集 4 个 Agent 的 VERDICT 和 FINDINGS
 2. 合并去重：将各 Agent 的 FINDINGS 按严重程度排序（S1 > S2 > S3 > S4，AI味重度 > 中度 > 轻度）
 3. **可选事实核查**：如果审查内容涉及需要验证的外部事实（历史年代、地理方位、职业细节等），额外 spawn `story-researcher` agent 搜索验证。将研究结果纳入裁决参考。
-4. **分歧呈现**：如果 Agent 间有冲突意见，明确呈现分歧让用户裁决
+4. 🔴 **CHECKPOINT · 分歧呈现**：如果 Agent 间有冲突意见，**停下**明确呈现分歧让用户裁决，不自动妥协
    - 例：story-architect 认为某段"结构合理"，但 character-designer 认为"角色弧线有问题"
    - 不要自动妥协，让用户看到双方理由
 5. 输出综合审查报告

@@ -139,7 +139,7 @@ Stage 4后半（角色关系提取）— 串行，依赖角色实体存在
 
 ## 质量门控概要
 
-阶段3-4完成前需通过质量检查，包含置信度、覆盖率、重叠率三项指标。具体阈值、计算方式和自检清单见 [material-decomposition.md 质量阈值体系](references/material-decomposition.md)。输出模板中的质量阈值速查见 [output-templates.md 质量阈值](references/output-templates.md)。
+🔴 **CHECKPOINT（质量门控）**：阶段3-4完成前**必须通过**质量检查（置信度/覆盖率/重叠率三项指标），任一不达标先回该阶段修正，不得带病进入下一阶段。具体阈值、计算方式和自检清单见 [material-decomposition.md 质量阈值体系](references/material-decomposition.md)。输出模板中的质量阈值速查见 [output-templates.md 质量阈值](references/output-templates.md)。
 
 ---
 

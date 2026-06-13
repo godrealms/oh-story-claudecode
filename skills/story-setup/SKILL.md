@@ -20,7 +20,7 @@ metadata:
 ## Phase 1：检测项目状态
 
 1. 检查当前目录是否已部署过（存在 `.story-deployed`）
-   - 如果已存在 → 使用 AskUserQuestion 确认是否重新部署
+   - 🔴 如果已存在 → 使用 AskUserQuestion 确认是否重新部署（不得静默覆盖）
 2. 检查是否有书名目录（包含 `追踪/` 子目录的目录，或用户自定义结构）
    - 有 → 识别为长篇项目，显示当前项目信息
    - 无 → 识别为新项目或短篇项目
@@ -33,7 +33,7 @@ metadata:
 
 ## Phase 2：部署基础设施
 
-使用 AskUserQuestion 确认部署位置后，依次执行：
+🔴 **CHECKPOINT**：使用 AskUserQuestion 确认部署位置后，再依次执行（未确认不得写盘）：
 
 ### 2.1 部署 CLAUDE.md
 - 读取 `skills/story-setup/references/templates/CLAUDE.md.tmpl`

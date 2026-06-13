@@ -88,7 +88,7 @@ metadata:
 
 ## 质量门控概要
 
-各阶段完成后需通过质量检查。具体检查项见 [output-templates.md 质量门控必填字段](references/output-templates.md)。
+🔴 **CHECKPOINT（质量门控）**：各阶段完成后**必须通过**质量检查才能进入下一阶段，不达标先补齐必填字段。具体检查项见 [output-templates.md 质量门控必填字段](references/output-templates.md)。
 
 核心标准详见 [material-decomposition.md 质量标准](references/material-decomposition.md)。
 
