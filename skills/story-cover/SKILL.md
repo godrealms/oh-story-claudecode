@@ -199,6 +199,16 @@ jq -r '.data[0].b64_json' response.json | base64 --decode > "${BOOK_DIR}/封面/
 
 ---
 
+## 失败处理
+
+| 触发条件 | 一线处理 → 仍失败兜底 |
+|---|---|
+| API 返回错误/超时 | 重试 1 次 → 检查 KEY/BASE_URL/额度，报错让用户核配置 |
+| 返回 `Unknown parameter: response_format` | 去掉该参数重试 → 换非 b64 返回格式 |
+| 文字渲染糊/错字 | 缩短书名字号、降背景复杂度重生成 → 留白生成纯画面后期叠字 |
+| 作者名被吞/不清 | prompt 加 `legible, well-spaced` 并强调底部留白 → 单独再出一版 |
+| 图生图但无参考图 | 退回文生图流程 → — |
+
 ## 不要做（反例黑名单）
 
 - ❌ 用真人照片风（用 `digital painting style`，避免 `photo`）
