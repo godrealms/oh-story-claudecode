@@ -298,12 +298,7 @@ metadata:
 - [ ] 身体部位同一词全文 ≤ 5 次
 - [ ] 「像」≤ 10 处
 
-**中文文本统计注意事项**：
-- `wc -c` 统计的是字节数，中文每字符 3 字节（UTF-8），不等于字数
-- 字数统计必须优先使用 Python 字符统计：`python3 -c "from pathlib import Path; print(len(Path('文件路径').read_text(encoding='utf-8')))"`
-- `wc -m` 仅作为 macOS/Linux 备选；Windows 环境或模型兼容性不确定时不要依赖 `wc`
-- 禁止用 `wc -c` 或模型估算字数
-- 行数统计使用 `wc -l` 是安全的
+**中文文本统计**：字数统计沿用上文「字数统计必须跨平台可执行」的 Python 方法（`wc -m` 仅 macOS/Linux 备选，禁用 `wc -c` 字节数）；行数用 `wc -l` 安全。
 
 🛑 **不通过 → 回退补足，不得进入精修。**
 
