@@ -87,7 +87,7 @@ metadata:
 
 **内置知识操作指引：**
 - 加载 `references/real-market-data.md`（跨平台写作差异对照）
-- 明确标注：「以下分析基于历史趋势数据；未完成实时榜单校验前只能作为候选假设。」并列出需要复扫的平台页面。
+- 🔴 **CHECKPOINT（数据来源）**：必须明确标注「以下分析基于历史趋势数据；未完成实时榜单校验前只能作为候选假设」，并列出需要复扫的平台页面。**不得把未校验的内置知识当作当期榜单结论输出。**
 
 **浏览器操控（高级模式）：**
 - 如果可用 agent-browser CLI，通过 CDP 连接 Chrome 获取平台数据
@@ -214,6 +214,16 @@ metadata:
 | [scripts/cdp-utils.js](scripts/cdp-utils.js) | CDP 公共工具函数（ab/sleep/evalJSON/safeStr/scrollLoad/getArg），各采集脚本共用 |
 | [scripts/dz-browse-scraper.js](scripts/dz-browse-scraper.js) | 点众短篇采集（男频/女频），文本解析+评分提取，配合 browser-cdp 使用 |
 | [scripts/heiyan-booklist-scraper.js](scripts/heiyan-booklist-scraper.js) | 黑岩书库列表采集，后端 API 模式（Bearer token），含字数/标签/价格/时间，支持 --detail 获取标签简介 |
+
+---
+
+## 不要做（反例黑名单）
+
+- ❌ 把未校验的内置知识当当期榜单结论
+- ❌ 输出无有效期/无复扫节点的"趋势"——短篇信号有效期最短仅数周
+- ❌ 只看热度不给饱和风险与可行性
+- ❌ 忽略平台调性差异（盐言精品深度 ≠ 七猫下沉完读率）
+- ❌ 把题材名当信号——要提取情绪类型、传播点、释放节奏
 
 ---
 

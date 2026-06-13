@@ -20,7 +20,7 @@ metadata:
 ## Phase 1：检测项目状态
 
 1. 检查当前目录是否已部署过（存在 `.story-deployed`）
-   - 如果已存在 → 使用 AskUserQuestion 确认是否重新部署
+   - 🔴 如果已存在 → 使用 AskUserQuestion 确认是否重新部署（不得静默覆盖）
 2. 检查是否有书名目录（包含 `追踪/` 子目录的目录，或用户自定义结构）
    - 有 → 识别为长篇项目，显示当前项目信息
    - 无 → 识别为新项目或短篇项目
@@ -33,7 +33,7 @@ metadata:
 
 ## Phase 2：部署基础设施
 
-使用 AskUserQuestion 确认部署位置后，依次执行：
+🔴 **CHECKPOINT**：使用 AskUserQuestion 确认部署位置后，再依次执行（未确认不得写盘）：
 
 ### 2.1 部署 CLAUDE.md
 - 读取 `skills/story-setup/references/templates/CLAUDE.md.tmpl`
@@ -151,4 +151,14 @@ hooks 注册合并按 command 字段去重：
 | references/templates/agents/ | 7 个 agent 定义模板（story-architect, character-designer, narrative-writer, consistency-checker, story-researcher, story-explorer, chapter-extractor） |
 | references/templates/settings-hooks.json | hooks 注册 JSON 片段 |
 | references/templates/上下文.md.tmpl | 写作上下文模板 |
+
+---
+
+## 不要做（反例黑名单）
+
+- ❌ 覆盖用户已有配置——CLAUDE.md/settings 一律合并而非替换
+- ❌ 静默改写 settings.local.json 的 permissions/env（只 append hooks）
+- ❌ 未经 AskUserQuestion 确认就重新部署/覆盖已部署项目
+- ❌ 假定固定绝对路径引用 `story-*/references/*.md`——优先项目内路径
+- ❌ 把 agent frontmatter 未知字段当错误强留导致目标工具报错——保留 name/description/tools，删未知字段
 

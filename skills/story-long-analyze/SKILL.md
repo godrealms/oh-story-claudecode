@@ -139,7 +139,7 @@ Stage 4后半（角色关系提取）— 串行，依赖角色实体存在
 
 ## 质量门控概要
 
-阶段3-4完成前需通过质量检查，包含置信度、覆盖率、重叠率三项指标。具体阈值、计算方式和自检清单见 [material-decomposition.md 质量阈值体系](references/material-decomposition.md)。输出模板中的质量阈值速查见 [output-templates.md 质量阈值](references/output-templates.md)。
+🔴 **CHECKPOINT（质量门控）**：阶段3-4完成前**必须通过**质量检查（置信度/覆盖率/重叠率三项指标），任一不达标先回该阶段修正，不得带病进入下一阶段。具体阈值、计算方式和自检清单见 [material-decomposition.md 质量阈值体系](references/material-decomposition.md)。输出模板中的质量阈值速查见 [output-templates.md 质量阈值](references/output-templates.md)。
 
 ---
 
@@ -239,6 +239,16 @@ Stage 3-5 的分块策略（输入分块大小 6-8K token/块，详见 [material
 | [references/output-templates.md](references/output-templates.md) | 快速/深度模式均需：输出模板+速查表 |
 | [references/material-decomposition.md](references/material-decomposition.md) | 深度模式：5阶段方法论+质量阈值 |
 | [references/deconstruction-notes.md](references/deconstruction-notes.md) | 拆书方法+影视拆解+抽象拆解法+题材实战 |
+
+---
+
+## 不要做（反例黑名单）
+
+- ❌ 智能分块漏章/重叠——所有章节必须被覆盖，每章只属于一个块
+- ❌ 把单本特征当通用规律——拆的是这本书的结构
+- ❌ 跳过质量门控就带病聚合（置信度/覆盖率/重叠率不达标先修正）
+- ❌ 提取龙套角色——按主角/反派/核心配角/功能角色分级过滤
+- ❌ 把拆解写成剧情复述，而非结构/爽点/节奏分析
 
 ---
 
