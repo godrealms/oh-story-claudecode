@@ -89,3 +89,11 @@ agent-browser --cdp 9222 type "<CSS selector>" "<text>"
 | 页面跳转到登录页 | `snapshot -i` 找登录按钮并操作 |
 | eval 返回 null | 检查 localStorage key 名称，或改用 `document.cookie` |
 | Chrome 进程残留 | macOS/Linux: `pkill -9 -x 'Google Chrome'` / Windows: `taskkill /F /IM chrome.exe`，后重新运行脚本 |
+
+## 不要做（反例黑名单）
+
+- ❌ 在用户未授权的站点/账号上执行操作
+- ❌ 把 token/cookie 输出到日志或写入会被提交的文件
+- ❌ 无确认就 `pkill` Chrome——可能丢失用户未保存的标签页
+- ❌ 用 eval 执行改动账号状态的脚本（发帖/删除/支付），除非用户明确要求
+- ❌ 假设固定 CSS selector——页面改版后先 `snapshot -i` 再操作

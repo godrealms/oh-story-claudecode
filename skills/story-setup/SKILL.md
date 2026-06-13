@@ -152,3 +152,13 @@ hooks 注册合并按 command 字段去重：
 | references/templates/settings-hooks.json | hooks 注册 JSON 片段 |
 | references/templates/上下文.md.tmpl | 写作上下文模板 |
 
+---
+
+## 不要做（反例黑名单）
+
+- ❌ 覆盖用户已有配置——CLAUDE.md/settings 一律合并而非替换
+- ❌ 静默改写 settings.local.json 的 permissions/env（只 append hooks）
+- ❌ 未经 AskUserQuestion 确认就重新部署/覆盖已部署项目
+- ❌ 假定固定绝对路径引用 `story-*/references/*.md`——优先项目内路径
+- ❌ 把 agent frontmatter 未知字段当错误强留导致目标工具报错——保留 name/description/tools，删未知字段
+
