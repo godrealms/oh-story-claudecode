@@ -162,3 +162,10 @@ hooks 注册合并按 command 字段去重：
 - ❌ 假定固定绝对路径引用 `story-*/references/*.md`——优先项目内路径
 - ❌ 把 agent frontmatter 未知字段当错误强留导致目标工具报错——保留 name/description/tools，删未知字段
 
+---
+
+## 语言
+
+- 跟随用户的语言回复，用户用什么语言就用什么语言回复
+- 中文回复遵循《中文文案排版指北》
+

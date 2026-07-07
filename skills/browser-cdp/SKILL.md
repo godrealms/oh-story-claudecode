@@ -1,7 +1,10 @@
 ---
 name: browser-cdp
 version: 1.0.0
-description: "Use this skill when you need to control a Chrome browser via CDP (Chrome DevTools Protocol) to reuse existing login sessions. Covers: launching Chrome in debug mode, opening URLs, waiting for page load, evaluating JavaScript, taking snapshots, and extracting auth tokens. Trigger phrases: browser automation, CDP, agent-browser, 浏览器操作, 操作浏览器, Chrome CDP, 复用登录态, extract token from browser."
+description: |
+  浏览器操控。通过 CDP（Chrome DevTools Protocol）控制 Chrome，复用已有登录态，执行浏览器自动化操作。
+  覆盖：调试模式启动 Chrome、打开页面并等待加载、执行 JavaScript、页面快照、提取 auth token。
+  触发方式：/browser-cdp、「浏览器操作」「操作浏览器」「复用登录态」、browser automation、CDP、agent-browser、Chrome CDP、extract token from browser
 metadata:
   openclaw:
     requires:
@@ -97,3 +100,10 @@ agent-browser --cdp 9222 type "<CSS selector>" "<text>"
 - ❌ 无确认就 `pkill` Chrome——可能丢失用户未保存的标签页
 - ❌ 用 eval 执行改动账号状态的脚本（发帖/删除/支付），除非用户明确要求
 - ❌ 假设固定 CSS selector——页面改版后先 `snapshot -i` 再操作
+
+---
+
+## 语言
+
+- 跟随用户的语言回复，用户用什么语言就用什么语言回复
+- 中文回复遵循《中文文案排版指北》

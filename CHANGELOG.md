@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.6.6
+
+> 全库引用完整性审查 + 共享文件同步自动化
+
+### Bug 修复
+
+- 修复 workflow-daily.md 指向 SKILL.md 不存在章节「单章写作步骤 3」的死引用（实际标题为「单章写作流程」）
+- 修复 publishing-guide.md、quality-rubric.md 中无法解析的跨 skill 引用（genre-readers / outline-methods / output-templates 补 skill 前缀）
+- 修复 story-review 嵌入 agent prompt 的禁用词表路径：裸相对路径在用户项目目录下无法解析，改为 skill 检索路径格式
+- 修复 story-deslop 两处内部矛盾：残留「15% 上限」改为分级上限表述；综合判定规则「五项指标」改为实际的六项
+- 同步两组漂移副本：banned-words.md（story-deslop 多余空行）、real-market-data.md（story-short-scan 补决策路由表）
+- 同步 marketplace.json 与 SKILL.md：story-short-analyze 版本 2.1.0 与功能描述、story-short-scan 平台清单、marketplace 主版本号脱节（0.6.0 → 0.6.6）；story/SKILL.md 补 version + metadata
+
+### 改进
+
+- 全库 129 处裸 .md 文件名引用统一包反引号，纳入 static-check 校验（static-check 从 1 Fail / 8 Warn 清零）
+- **check-shared-files.sh**：豁免 long/short 刻意分化的 4 个文件并注明理由；新增 GROUP_SYNC 机制强制 short 组内副本一致；新增 `--sync` 自动同步模式（canonical 选择：唯一未提交簇 → 多数版本 → 最新提交时间 → 平局跳过人工处理）
+- **CI**：cross-platform.yml 补跑 check-shared-files.sh，共享副本漂移可被 CI 拦截
+- **story-setup / browser-cdp**：补齐「语言」章节；browser-cdp description 与其他 skill 统一为中文（保留英文触发词）
+
+### 验证
+
+- `bash scripts/static-check.sh`（13/13 Pass，0 Fail 0 Warn）
+- `bash scripts/check-shared-files.sh`（23 组共享文件一致）
+- `bash scripts/check-hook-regex-sync.sh`
+- `--sync` 负向实测：3 份组单簇未提交修改推全组、GROUP_SYNC pair 同步、正常态零操作
+
 ## v0.6.5
 
 > 写作去 AI 味密度修复 + 对标路径说明统一
