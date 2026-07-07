@@ -17,7 +17,14 @@ if [ ! -d "$SKILLS_DIR" ]; then
 fi
 
 # Known intentional differences (basename): these files are expected to differ
-IGNORE_NAMES="output-templates.md"
+# - output-templates.md / material-decomposition.md: long vs short 两套拆解方法论
+# - format-and-structure.md: 短篇版含小节(beat)结构与适用范围说明
+# - genre-writing-formulas.md: 「配合」引用指向各自 skill 内存在的文件
+IGNORE_NAMES="output-templates.md material-decomposition.md format-and-structure.md genre-writing-formulas.md"
+
+# Group sync: files exempted above but whose copies WITHIN a variant group must still match.
+# Format: "basename:skillA=skillB" (each entry asserts skillA and skillB copies are identical)
+GROUP_SYNC="genre-writing-formulas.md:story-short-analyze=story-short-write"
 
 mismatches=0
 checked=0
@@ -69,6 +76,32 @@ for base in $dup_names; do
       mismatches=$((mismatches + 1))
     fi
   done
+done
+
+# Group sync checks: exempted basenames whose in-group copies must match
+for entry in $GROUP_SYNC; do
+  base="${entry%%:*}"
+  pair="${entry#*:}"
+  skill_a="${pair%%=*}"
+  skill_b="${pair#*=}"
+  path_a="$SKILLS_DIR/$skill_a/references/$base"
+  path_b="$SKILLS_DIR/$skill_b/references/$base"
+  if [ ! -f "$path_a" ] || [ ! -f "$path_b" ]; then
+    echo ""
+    echo "MISMATCH: $base (group sync: missing file)"
+    [ -f "$path_a" ] || echo "  Missing: $skill_a"
+    [ -f "$path_b" ] || echo "  Missing: $skill_b"
+    mismatches=$((mismatches + 1))
+    continue
+  fi
+  checked=$((checked + 1))
+  if ! diff -q "$path_a" "$path_b" >/dev/null 2>&1; then
+    echo ""
+    echo "MISMATCH: $base (group sync: $skill_a vs $skill_b must match)"
+    echo "  Reference: $skill_a"
+    echo "  Differs in: $skill_b"
+    mismatches=$((mismatches + 1))
+  fi
 done
 
 echo ""

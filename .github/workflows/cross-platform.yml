@@ -10,6 +10,8 @@ jobs:
         run: bash scripts/static-check.sh
       - name: Check hook-regex sync
         run: bash scripts/check-hook-regex-sync.sh
+      - name: Check shared file consistency
+        run: bash scripts/check-shared-files.sh
 
   windows:
     runs-on: windows-latest
