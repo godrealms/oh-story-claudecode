@@ -110,7 +110,7 @@
 
 ---
 
-> 书名命名技法详见 genre-readers.md「书名命名技法」章节。章节名策略详见 outline-methods.md「章节名策略」章节。
+> 书名命名技法详见 `story-long-write/references/genre-readers.md`「书名命名技法」章节。章节名策略详见 `story-long-write/references/outline-methods.md`「章节名策略」章节。
 
 ---
 

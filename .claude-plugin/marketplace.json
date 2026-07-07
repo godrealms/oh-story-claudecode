@@ -50,7 +50,7 @@
     },
     {
       "name": "story-short-scan",
-      "description": "短篇网文扫榜。分析知乎盐言故事、番茄短篇等平台热门短篇数据，捕捉风口题材。",
+      "description": "短篇网文扫榜。分析知乎盐言、番茄短篇、七猫、黑岩、点众等平台热门短篇数据，捕捉风口题材。",
       "source": "./",
       "strict": false,
       "version": "1.0.0",
@@ -60,10 +60,10 @@
     },
     {
       "name": "story-short-analyze",
-      "description": "短篇网文拆文。拆解爆款短篇小说的叙事结构、情绪曲线、反转技巧、钩子设计。",
+      "description": "短篇网文拆文。深度拆解爆款短篇小说的故事核、结构、情感线、反转设计、写作手法、共鸣层次。",
       "source": "./",
       "strict": false,
-      "version": "1.0.0",
+      "version": "2.1.0",
       "category": "novel-analysis",
       "keywords": ["short-novel", "analysis", "structure", "twist", "hook", "chinese"],
       "skills": ["./skills/story-short-analyze"]

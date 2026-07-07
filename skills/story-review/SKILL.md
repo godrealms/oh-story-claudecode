@@ -104,7 +104,7 @@ metadata:
   你是 narrative-writer，从文字质量层面审查以下内容。
   你的任务是【找问题】，不是验证正确性。以最严苛的标准审视。
   审查范围：{待审查内容}
-  禁用词表：references/banned-words.md
+  禁用词表：`story-review/references/banned-words.md`（按 skill 检索路径解析；不可用时回退 `story-deslop/references/banned-words.md`）
   检查项：
   1. 是否存在禁用词/套话/陈词滥调？
   2. 格式是否合规（一段一句、≤60字、无空行、对话独立成行）？
@@ -240,7 +240,7 @@ Review Mode: solo
 | 触发条件 | 一线处理 → 仍失败兜底 |
 |---|---|
 | 子代理不可用/未部署 | 降级 solo 自检 → 输出简化版报告 |
-| 无法识别目标平台 | 默认加载 quality-rubric.md → 询问用户平台 |
+| 无法识别目标平台 | 默认加载 `quality-rubric.md` → 询问用户平台 |
 | 待审内容缺失/路径错 | 让用户确认审查范围 → 审最近修改（git diff）或当前章节 |
 | 设定文件缺失无法核一致性 | 仅做文本内自洽检查 → 标注「未核对外部设定」 |
 | Agent 输出格式不规范 | 按 VERDICT/FINDINGS/RECOMMENDATIONS 重排 → 提取关键问题归并 |

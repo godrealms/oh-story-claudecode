@@ -681,9 +681,9 @@
 
 - **SKILL.md** = 路由逻辑 + 管道概要（Phase 1 用户交互 + Phase 2-6 管道表）
 - **本文件** = 方法论细节（Phase 2-6 操作步骤 + 情节节点 + 写作手法 + 情感线 + 节奏 + 共鸣 + 质量标准）
-- **output-templates.md** = 具体输出格式模板（每个 Phase 的 markdown 模板 + 质量门控）
+- **`output-templates.md`** = 具体输出格式模板（每个 Phase 的 markdown 模板 + 质量门控）
 
 三个文件协同工作：
 1. SKILL.md 决定执行哪个 Phase（Phase 1 由 SKILL.md 直接处理）
 2. 本文件告诉"怎么分析"（Phase 2-6 的方法论）
-3. output-templates.md 告诉"怎么输出"（Phase 2-6 的格式模板）
+3. `output-templates.md` 告诉"怎么输出"（Phase 2-6 的格式模板）

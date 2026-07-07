@@ -1,5 +1,5 @@
 # 拆文输出模板
-按需加载，配合 SKILL.md 和 material-decomposition.md 使用。
+按需加载，配合 SKILL.md 和 `material-decomposition.md` 使用。
 
 ---
 

@@ -28,7 +28,7 @@
 
 > 完整禁用词表见 [banned-words.md](banned-words.md)
 
-**补充类目**（banned-words.md 未覆盖的高阶替换）：
+**补充类目**（`banned-words.md` 未覆盖的高阶替换）：
 
 | 类别 | 替代原则 |
 |------|---------|

@@ -1,9 +1,13 @@
 ---
 name: story
+version: 1.0.0
 description: |
   网络小说工具箱主入口。根据用户需求自动路由到对应 skill。
   触发方式：/story、/网文、「我想写小说」「帮我写书」「写网文」
   当用户意图不明确时触发此 skill，由路由逻辑分发到具体的扫榜/拆文/写作/去AI味/封面 skill。
+metadata:
+  openclaw:
+    source: https://github.com/worldwonderer/oh-story-claudecode
 ---
 
 # story：网文工具箱路由

@@ -41,7 +41,7 @@ metadata:
 
 ## Phase 2-4：快速模式
 
-按 output-templates.md 中的模板输出：
+按 `output-templates.md` 中的模板输出：
 
 - **Phase 2**：黄金三章逐章拆解。按 [output-templates.md](references/output-templates.md) 的「快速模式 > Phase 2 第一章」模板输出，第二三章追加信息密度/冲突升级/节奏变化关注点。
 - **Phase 3**：整体结构拆解。按 [output-templates.md](references/output-templates.md) 的「快速模式 > Phase 3 整体结构」模板输出故事线分析、人物架构、节奏地图。反派设计增加类型路由：人形反派用标准模板（层级/逼格/动机链）；非人形反派（灵气复苏/末世/国运等抽象对抗型）用：核心对抗面{描述} | 紧迫感来源{描述} | 升级机制{描述} | 叙事替代{用什么替代传统打脸}。
@@ -131,7 +131,7 @@ Stage 4后半（角色关系提取）— 串行，依赖角色实体存在
 
 **部分失败容忍**：单章/单阶段失败不阻断管线。失败记录到 `_progress.md` 的「失败记录」表（`| 类型 | 章节/阶段 | 错误信息 | 重试状态 |`）。最终状态可为 `completed_with_errors`（在拆文报告中注明失败详情）。
 
-> 与 material-decomposition.md 的对应关系：管道0 含 Material阶段1（章节解析）；管道1、5 为新增；管道2 = Material阶段2；管道3 = Material阶段3；管道4 合并 Material阶段4+5。
+> 与 `material-decomposition.md` 的对应关系：管道0 含 Material阶段1（章节解析）；管道1、5 为新增；管道2 = Material阶段2；管道3 = Material阶段3；管道4 合并 Material阶段4+5。
 
 详细模板见 [output-templates.md](references/output-templates.md)，方法论见 [material-decomposition.md](references/material-decomposition.md)。
 

@@ -1,4 +1,4 @@
-# workflow-revision.md：大修工作流
+# `workflow-revision.md`：大修工作流
 
 本文件为"大修/回炉"场景的完整指引。SKILL.md 路由到本文件后，按以下流程执行。
 

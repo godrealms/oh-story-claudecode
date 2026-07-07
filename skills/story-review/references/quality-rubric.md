@@ -16,7 +16,7 @@
 | 输出完整 | 所有 Phase 都有输出 | 缺少 Phase 输出 |
 | 引用准确 | 引用了原文具体内容 | 引用模糊或无引用 |
 | 深度足够 | 有洞察和可操作建议 | 只有表面总结 |
-| 格式规范 | 使用 output-templates.md 格式 | 格式不符合模板 |
+| 格式规范 | 使用对应 analyze skill 的 `references/output-templates.md` 格式 | 格式不符合模板 |
 
 ## utility 类（story-deslop、story-cover）
 
